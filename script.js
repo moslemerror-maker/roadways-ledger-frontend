@@ -30,6 +30,33 @@ const FIELD_NAMES = [
     'weight', 'freight', 'diesel', 'total_adv', 'balance', 'pump_name', 
     'payment_officer', 'damage_if_any', 'margin'
 ];
+// INSIDE frontend/script.js
+
+// ... existing code ...
+
+const loading = $('#loading');
+// ... existing code ...
+
+// --- NEW AUTH ELEMENTS ---
+const loginView = $('#login-view');
+const loginForm = $('#login-form');
+const loginError = $('#login-error');
+const mainAppContent = $('#main-app-content');
+const loginButtonText = $('#login-button-text');
+const logoutBtn = $('#logout-btn'); // You need to add this button to your header HTML!
+
+const createUserModal = $('#create-user-modal');
+const createUserForm = $('#create-user-form');
+const userCreationError = $('#user-creation-error');
+const cancelCreateUserBtn = $('#cancel-create-user');
+
+// Update global state
+let state = {
+    data: [],
+    editingId: null,
+    currentUser: null, // NEW: Stores logged-in user info
+};
+// ... rest of script.js ...
 
 // --- CORE UTILITIES ---
 
@@ -41,6 +68,106 @@ function showToast(message, isError = false) {
         toast.classList.add('hidden');
     }, 3000);
 }
+// INSIDE frontend/script.js (add these functions)
+
+function renderUI() {
+    if (state.currentUser) {
+        loginView.classList.add('hidden');
+        mainAppContent.classList.remove('hidden');
+        loadData(); // Load data only if logged in
+        showToast(`Welcome, ${state.currentUser.username}!`);
+    } else {
+        loginView.classList.remove('hidden');
+        mainAppContent.classList.add('hidden');
+        loginForm.reset();
+    }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    loginError.classList.add('hidden');
+    loginButtonText.textContent = 'Logging In...';
+
+    const username = $('#username').value;
+    const password = $('#password').value;
+
+    try {
+        const response = await fetch(`${API_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        if (response.ok) {
+            const user = await response.json();
+            state.currentUser = user;
+            // Optionally save user state to localStorage for persistence
+            // localStorage.setItem('currentUser', JSON.stringify(user)); 
+            renderUI();
+        } else {
+            const err = await response.json();
+            loginError.textContent = err.error || 'Invalid username or password.';
+            loginError.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error('Login error:', err);
+        loginError.textContent = 'Cannot connect to server.';
+        loginError.classList.remove('hidden');
+    } finally {
+        loginButtonText.textContent = 'Log In';
+    }
+}
+
+function handleLogout() {
+    state.currentUser = null;
+    // localStorage.removeItem('currentUser'); // If using local storage
+    state.data = []; // Clear data
+    renderUI();
+    showToast('Logged out successfully.');
+}
+
+async function handleCreateUserSubmit(e) {
+    e.preventDefault();
+    userCreationError.classList.add('hidden');
+
+    const username = $('#new-username').value;
+    const password = $('#new-password').value;
+
+    try {
+        const response = await fetch(`${API_URL}/api/users`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            showToast('User created successfully! You can now log in.', false);
+            createUserModal.classList.add('hidden');
+            createUserForm.reset();
+        } else {
+            const err = await response.json();
+            userCreationError.textContent = err.error || 'Failed to create user.';
+            userCreationError.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error('Creation error:', err);
+        userCreationError.textContent = 'Error connecting to server for user creation.';
+        userCreationError.classList.remove('hidden');
+    }
+}
+
+// --- INITIALIZATION ---
+// Replace the old DOMContentLoaded listener with these new ones:
+biltyForm.addEventListener('submit', handleFormSubmit);
+cancelBtn.addEventListener('click', resetForm);
+exportBtn.addEventListener('click', exportToCSV);
+
+// New Auth Listeners
+loginForm.addEventListener('submit', handleLogin);
+logoutBtn.addEventListener('click', handleLogout); // You must add this button to header HTML
+$('#show-create-user-modal').addEventListener('click', () => createUserModal.classList.remove('hidden'));
+cancelCreateUserBtn.addEventListener('click', () => createUserModal.classList.add('hidden'));
+createUserForm.addEventListener('submit', handleCreateUserSubmit);
 
 function formatCurrency(value) {
     const num = parseFloat(value);
