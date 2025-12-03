@@ -61,14 +61,15 @@ function showToast(message, isError = false) {
 
 function renderUI() {
     if (state.currentUser) {
-        loginView.classList.add('hidden');
+        // This runs only AFTER login
         mainAppContent.classList.remove('hidden');
-        loadData(); 
+        loadData(); // THIS IS CORRECT HERE
         showToast(`Welcome, ${state.currentUser.username}!`);
     } else {
+        // This runs UNCONDITIONALLY on page load if no session exists
         loginView.classList.remove('hidden');
-        mainAppContent.classList.add('hidden');
-        loginForm.reset();
+        
+        
     }
 }
 
@@ -94,6 +95,9 @@ async function handleLogin(e) {
             // SUCCESS
             const user = await response.json();
             state.currentUser = user;
+            
+            loadData();
+
             renderUI();
         } else {
             // FAILURE (401, 404, 500, etc.)
