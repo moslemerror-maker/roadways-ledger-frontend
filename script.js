@@ -44,8 +44,6 @@ const loginError = $('#login-error');
 const mainAppContent = $('#main-app-content');
 const loginButtonText = $('#login-button-text');
 const logoutBtn = $('#logout-btn'); // You need to add this button to your header HTML!
-
-
 const createUserForm = $('#create-user-form');
 const userCreationError = $('#user-creation-error');
 const cancelCreateUserBtn = $('#cancel-create-user');
