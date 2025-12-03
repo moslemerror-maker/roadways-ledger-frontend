@@ -95,10 +95,9 @@ async function handleLogin(e) {
             // SUCCESS
             const user = await response.json();
             state.currentUser = user;
-            
-            loadData();
-
+                        
             renderUI();
+
         } else {
             // FAILURE (401, 404, 500, etc.)
             let errorMessage = 'Login failed. Check server logs.';
