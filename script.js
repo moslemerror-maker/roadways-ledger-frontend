@@ -78,8 +78,10 @@ function renderUI() {
     }
 }
 
+// INSIDE frontend/script.js
+
 async function handleLogin(e) {
-    e.preventDefault();
+    e.preventDefault(); 
     loginError.classList.add('hidden');
     loginButtonText.textContent = 'Logging In...';
 
@@ -93,19 +95,32 @@ async function handleLogin(e) {
             body: JSON.stringify({ username, password })
         });
         
+        // --- MODIFIED ERROR HANDLING BLOCK ---
         if (response.ok) {
+            // SUCCESS
             const user = await response.json();
             state.currentUser = user;
-
             renderUI();
         } else {
-            const err = await response.json();
-            loginError.textContent = err.error || 'Invalid username or password.';
+            // FAILURE (401, 404, 500, etc.)
+            let errorMessage = 'Login failed. Check server logs.';
+            try {
+                // Try to read the error message from the JSON body
+                const err = await response.json(); 
+                errorMessage = err.error || `Error ${response.status}: Failed to process login.`;
+            } catch (readError) {
+                // If the response is not valid JSON (e.g., plain text 500 error)
+                errorMessage = `Server Error (${response.status}). Check server logs for details.`;
+            }
+            
+            loginError.textContent = errorMessage;
             loginError.classList.remove('hidden');
         }
+        // --- END MODIFIED BLOCK ---
+        
     } catch (err) {
-        console.error('Login error:', err);
-        loginError.textContent = 'Cannot connect to server.';
+        console.error('Network error during login:', err);
+        loginError.textContent = 'Cannot connect to server. Please check your API URL.';
         loginError.classList.remove('hidden');
     } finally {
         loginButtonText.textContent = 'Log In';
