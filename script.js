@@ -62,6 +62,7 @@ function showToast(message, isError = false) {
 function renderUI() {
     if (state.currentUser) {
         // This runs only AFTER login
+        loginView.classList.add('hidden');
         mainAppContent.classList.remove('hidden');
         loadData(); // THIS IS CORRECT HERE
         showToast(`Welcome, ${state.currentUser.username}!`);
