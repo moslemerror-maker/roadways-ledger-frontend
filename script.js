@@ -386,18 +386,32 @@ function exportToCSV() {
             `"${item.bill_date ? new Date(item.bill_date).toLocaleDateString() : ''}"`,
             `"${item.truck_no || ''}"`,
             `"${item.destination || ''}"`,
-            `"${parseFloat(item.weight).toFixed(3) || '0.000'}"`,
-            `"₹ ${formatCurrency(item.freight)}"`,
+            `"${parseFloat(item.weight).toFixed(3) || '0.000'}"`, 
+        
+        // Freight (₹) - **REMOVE FORMATTING/SYMBOL**
+            `"${parseFloat(item.freight) || 0}"`, // Export raw number (or 0 if null)
+        
+        // Diesel (L) - Keep as fixed(2)
             `"${parseFloat(item.diesel).toFixed(2) || '0.00'}"`,
-            `"₹ ${formatCurrency(item.total_adv)}"`,
-            `"₹ ${formatCurrency(item.balance)}"`,
+        
+        // Total Adv (₹) - **REMOVE FORMATTING/SYMBOL**
+            `"${parseFloat(item.total_adv) || 0}"`, // Export raw number (or 0 if null)
+        
+        // Balance (₹) - **REMOVE FORMATTING/SYMBOL**
+            `"${parseFloat(item.balance) || 0}"`, // Export raw number (or 0 if null)
+        
+        // Pump Name, Payment Officer, Damage If Any
             `"${item.pump_name || ''}"`,
             `"${item.payment_officer || ''}"`,
             `"${item.damage_if_any || ''}"`,
-            `"₹ ${formatCurrency(item.margin)}"`,
+        
+        // Margin (₹) - **REMOVE FORMATTING/SYMBOL**
+            `"${parseFloat(item.margin) || 0}"`, // Export raw number (or 0 if null)
+        
+        // Date Added
             `"${item.date_added ? new Date(item.date_added).toLocaleDateString() : ''}"`
-        ].join(',')
-    );
+    ].join(',')
+);
     
     const csvContent = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
