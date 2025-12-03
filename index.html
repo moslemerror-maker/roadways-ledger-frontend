@@ -235,25 +235,33 @@
     <script src="script.js"></script>
 
     <script>
-        // *** RENDER URL ADJUSTMENT - MUST BE UPDATED AFTER DEPLOYMENT ***
-        const API_URL = 'https://roadways-ledger-backend.onrender.com'; 
-        // ***************************************************************
+    // *** RENDER URL ADJUSTMENT - MUST BE UPDATED AFTER DEPLOYMENT ***
+    const API_URL = 'https://roadways-ledger-backend.onrender.com'; 
+    // ***************************************************************
+    
+    // Define the core DOM reference function (which is used in script.js)
+    const $ = (selector) => document.querySelector(selector);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Define Local/Global Element References HERE ---
+        // This ensures the element exists before we try to use it.
+        const loginForm = $('#login-form');
         
-        // This links the main initialization logic from script.js to the page load event
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check for persistent login here if implemented
-            loginForm.addEventListener('submit', handleLogin); // New Auth
-            
-            // These handlers are attached to the main app content only after login
-            const attachMainListeners = () => {
-                biltyForm.addEventListener('submit', handleFormSubmit);
-                cancelBtn.addEventListener('click', resetForm);
-                exportBtn.addEventListener('click', exportToCSV);
-            };
-            
-            // Initial render call to show login screen
-            renderUI();
-        });
-    </script>
+        // --- 2. Attach Listeners ---
+        // Crucial: Explicitly attach the handler
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
+        }
+
+        // Attach other main listeners (if login is successful, these are used later)
+        const logoutBtn = $('#logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+        
+        // --- 3. Initial Render ---
+        renderUI();
+    });
+</script>
 </body>
 </html>

@@ -1,6 +1,4 @@
-// frontend/script.js
 
-// Placeholder URL - This MUST be updated after Render deployment!
 const API_URL = 'https://roadways-ledger-backend.onrender.com'; 
 
 let state = {
@@ -10,7 +8,7 @@ let state = {
 
 const $ = (selector) => document.querySelector(selector);
 
-// --- DOM ELEMENT REFERENCES ---
+
 const biltyForm = $('#bilty-form');
 const biltyTableBody = $('#bilty-table-body');
 const formTitle = $('#form-title');
@@ -30,33 +28,32 @@ const FIELD_NAMES = [
     'weight', 'freight', 'diesel', 'total_adv', 'balance', 'pump_name', 
     'payment_officer', 'damage_if_any', 'margin'
 ];
-// INSIDE frontend/script.js
 
-// ... existing code ...
+
+
 
 const loading = $('#loading');
-// ... existing code ...
 
-// --- NEW AUTH ELEMENTS ---
+
 const loginView = $('#login-view');
 const loginForm = $('#login-form');
 const loginError = $('#login-error');
 const mainAppContent = $('#main-app-content');
 const loginButtonText = $('#login-button-text');
-const logoutBtn = $('#logout-btn'); // You need to add this button to your header HTML!
+const logoutBtn = $('#logout-btn'); 
 const createUserForm = $('#create-user-form');
 const userCreationError = $('#user-creation-error');
 const cancelCreateUserBtn = $('#cancel-create-user');
 
-// Update global state
+
 let state = {
     data: [],
     editingId: null,
-    currentUser: null, // NEW: Stores logged-in user info
+    currentUser: null, 
 };
-// ... rest of script.js ...
 
-// --- CORE UTILITIES ---
+
+
 
 function showToast(message, isError = false) {
     toastMessage.textContent = message;
@@ -66,13 +63,13 @@ function showToast(message, isError = false) {
         toast.classList.add('hidden');
     }, 3000);
 }
-// INSIDE frontend/script.js (add these functions)
+
 
 function renderUI() {
     if (state.currentUser) {
         loginView.classList.add('hidden');
         mainAppContent.classList.remove('hidden');
-        loadData(); // Load data only if logged in
+        loadData(); 
         showToast(`Welcome, ${state.currentUser.username}!`);
     } else {
         loginView.classList.remove('hidden');
@@ -99,8 +96,7 @@ async function handleLogin(e) {
         if (response.ok) {
             const user = await response.json();
             state.currentUser = user;
-            // Optionally save user state to localStorage for persistence
-            // localStorage.setItem('currentUser', JSON.stringify(user)); 
+
             renderUI();
         } else {
             const err = await response.json();
@@ -118,8 +114,8 @@ async function handleLogin(e) {
 
 function handleLogout() {
     state.currentUser = null;
-    // localStorage.removeItem('currentUser'); // If using local storage
-    state.data = []; // Clear data
+    
+    state.data = []; 
     renderUI();
     showToast('Logged out successfully.');
 }
@@ -154,15 +150,15 @@ async function handleCreateUserSubmit(e) {
     }
 }
 
-// --- INITIALIZATION ---
-// Replace the old DOMContentLoaded listener with these new ones:
+
+
 biltyForm.addEventListener('submit', handleFormSubmit);
 cancelBtn.addEventListener('click', resetForm);
 exportBtn.addEventListener('click', exportToCSV);
 
-// New Auth Listeners
+
 loginForm.addEventListener('submit', handleLogin);
-logoutBtn.addEventListener('click', handleLogout); // You must add this button to header HTML
+logoutBtn.addEventListener('click', handleLogout); 
 cancelCreateUserBtn.addEventListener('click', () => createUserModal.classList.add('hidden'));
 createUserForm.addEventListener('submit', handleCreateUserSubmit);
 
@@ -171,7 +167,7 @@ function formatCurrency(value) {
     return isNaN(num) ? '0.00' : num.toFixed(2);
 }
 
-// --- DATA FETCHING & RENDERING ---
+
 
 async function loadData() {
     loading.classList.remove('hidden');
@@ -238,7 +234,7 @@ function renderTable() {
     attachButtonListeners();
 }
 
-// --- FORM & CRUD LOGIC ---
+
 
 function attachButtonListeners() {
     document.querySelectorAll('.edit-btn').forEach(btn => {
@@ -258,24 +254,24 @@ function handleEdit(id) {
     saveBtnText.textContent = 'Update Record';
     cancelBtn.classList.remove('hidden');
 
-    // Populate form fields
+    
     FIELD_NAMES.forEach(field => {
         const inputEl = $(`#${field}`);
         let value = entry[field];
         
         if (inputEl) {
             if (field === 'bill_date' && value) {
-                // Format full date string to YYYY-MM-DD for input type="date"
+                
                 inputEl.value = value.split('T')[0]; 
             } else if (inputEl.type === 'number' && value !== null) {
-                // Ensure number fields show raw value from DB
+                
                 inputEl.value = parseFloat(value).toString();
             } else {
                 inputEl.value = value || '';
             }
         }
     });
-    // Disable Bilty SL No. field when editing
+    
     $('#bilty_sl_no').disabled = true;
 }
 
@@ -302,7 +298,7 @@ function resetForm() {
     saveBtnText.textContent = 'Save New Record';
     cancelBtn.classList.add('hidden');
     formError.classList.add('hidden');
-    // Re-enable Bilty SL No. field
+    
     $('#bilty_sl_no').disabled = false;
 }
 
@@ -320,7 +316,7 @@ async function handleFormSubmit(e) {
     const url = isEditing ? `${API_URL}/api/bilty/${state.editingId}` : `${API_URL}/api/bilty`;
     const method = isEditing ? 'PUT' : 'POST';
     
-    // Disable Bilty SL No. during submission
+    
     if(isEditing) {
          $('#bilty_sl_no').disabled = true;
     }
@@ -358,12 +354,12 @@ async function handleFormSubmit(e) {
         formError.classList.remove('hidden');
     } finally {
         saveBtn.disabled = false;
-         // Re-enable Bilty SL No. regardless of success/fail (for next entry)
+         
          $('#bilty_sl_no').disabled = false; 
     }
 }
 
-// --- EXPORT LOGIC ---
+
 function exportToCSV() {
     if (state.data.length === 0) {
         showToast('No data to export.', true);
