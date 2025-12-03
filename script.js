@@ -1,7 +1,7 @@
 // frontend/script.js
 
 // Placeholder URL - This MUST be updated after Render deployment!
-const API_URL = 'https://roadways-ledger-backend-xxxx.onrender.com'; 
+const API_URL = 'https://roadways-ledger-backend.onrender.com'; 
 
 let state = {
     data: [],
