@@ -45,7 +45,7 @@ const mainAppContent = $('#main-app-content');
 const loginButtonText = $('#login-button-text');
 const logoutBtn = $('#logout-btn'); // You need to add this button to your header HTML!
 
-const createUserModal = $('#create-user-modal');
+
 const createUserForm = $('#create-user-form');
 const userCreationError = $('#user-creation-error');
 const cancelCreateUserBtn = $('#cancel-create-user');
@@ -165,7 +165,6 @@ exportBtn.addEventListener('click', exportToCSV);
 // New Auth Listeners
 loginForm.addEventListener('submit', handleLogin);
 logoutBtn.addEventListener('click', handleLogout); // You must add this button to header HTML
-$('#show-create-user-modal').addEventListener('click', () => createUserModal.classList.remove('hidden'));
 cancelCreateUserBtn.addEventListener('click', () => createUserModal.classList.add('hidden'));
 createUserForm.addEventListener('submit', handleCreateUserSubmit);
 
