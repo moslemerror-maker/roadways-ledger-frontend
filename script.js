@@ -1,42 +1,35 @@
+// Corrected and Consolidated Global Declarations for script.js
 
-const API_URL = 'https://roadways-ledger-backend.onrender.com'; 
+const API_URL = 'https://roadways-ledger-backend.onrender.com'; // CHECK URL after deployment!
 
 let state = {
     data: [],
     editingId: null,
+    currentUser: null, // Ensure this property is included for login state
 };
 
+// Define the DOM selector helper once
 const $ = (selector) => document.querySelector(selector);
 
-
+// --- MAIN APPLICATION ELEMENTS ---
 const biltyForm = $('#bilty-form');
 const biltyTableBody = $('#bilty-table-body');
 const formTitle = $('#form-title');
 const saveBtn = $('#save-btn');
 const saveBtnText = $('#save-btn-text');
 const cancelBtn = $('#cancel-btn');
-const loading = $('#loading');
+const loading = $('#loading'); // Defined ONLY ONCE
 const noDataMsg = $('#no-data-msg');
 const exportBtn = $('#export-btn');
 const formError = $('#form-error');
 
+// --- TOAST/FEEDBACK ELEMENTS ---
 const toast = $('#toast');
 const toastMessage = $('#toast-message');
 
-const FIELD_NAMES = [
-    'bilty_sl_no', 'lr_no', 'bill_no', 'bill_date', 'truck_no', 'destination',
-    'weight', 'freight', 'diesel', 'total_adv', 'balance', 'pump_name', 
-    'payment_officer', 'damage_if_any', 'margin'
-];
-
-
-
-
-const loading = $('#loading');
-
-
+// --- AUTHENTICATION ELEMENTS ---
 const loginView = $('#login-view');
-const loginForm = $('#login-form');
+const loginForm = $('#login-form'); // Defined ONLY ONCE
 const loginError = $('#login-error');
 const mainAppContent = $('#main-app-content');
 const loginButtonText = $('#login-button-text');
@@ -45,13 +38,14 @@ const createUserForm = $('#create-user-form');
 const userCreationError = $('#user-creation-error');
 const cancelCreateUserBtn = $('#cancel-create-user');
 
+// --- FIELD NAMES (Required for forms/exports) ---
+const FIELD_NAMES = [
+    'bilty_sl_no', 'lr_no', 'bill_no', 'bill_date', 'truck_no', 'destination',
+    'weight', 'freight', 'diesel', 'total_adv', 'balance', 'pump_name', 
+    'payment_officer', 'damage_if_any', 'margin'
+];
 
-let state = {
-    data: [],
-    editingId: null,
-    currentUser: null, 
-};
-
+// All subsequent code in script.js (functions, listeners) should follow these declarations.
 
 
 
