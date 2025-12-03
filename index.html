@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>North East Roadways - Ledger System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        roadways: '#0047AB', /* Classic Blue */
+                        secondary: '#FFD700', /* Gold/Yellow accent */
+                    }
+                },
+            },
+        }
+    </script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+
+    <header class="bg-roadways shadow-xl sticky top-0 z-10">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-truck text-secondary text-2xl mr-3"></i>
+                    <span class="text-2xl font-extrabold text-white">NORTH EAST ROADWAYS</span>
+                </div>
+                <button id="export-btn" class="flex items-center px-4 py-2 border border-secondary rounded-full text-sm font-medium text-white bg-green-600 hover:bg-green-700 shadow-lg transition duration-200">
+                    <i class="fas fa-file-excel mr-2"></i>Export Ledger
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-2xl h-fit border-t-4 border-roadways">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6" id="form-title">New Dispatch Record</h2>
+                <form id="bilty-form" class="space-y-4">
+                    <input type="hidden" id="bilty-id">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="bilty_sl_no" class="block text-sm font-semibold text-gray-700 required-label">BILTY SL NO.</label>
+                            <input type="text" id="bilty_sl_no" class="mt-1 form-input w-full border-gray-300" required>
+                        </div>
+                        <div>
+                            <label for="lr_no" class="block text-sm font-semibold text-gray-700">LR NO.</label>
+                            <input type="text" id="lr_no" class="mt-1 form-input w-full border-gray-300">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="bill_no" class="block text-sm font-semibold text-gray-700">BILL NO</label>
+                            <input type="text" id="bill_no" class="mt-1 form-input w-full border-gray-300">
+                        </div>
+                        <div>
+                            <label for="bill_date" class="block text-sm font-semibold text-gray-700">BILL DATE</label>
+                            <input type="date" id="bill_date" class="mt-1 form-input w-full border-gray-300">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="truck_no" class="block text-sm font-semibold text-gray-700">TRUCK NO</label>
+                        <input type="text" id="truck_no" class="mt-1 form-input w-full border-gray-300">
+                    </div>
+                    <div>
+                        <label for="destination" class="block text-sm font-semibold text-gray-700">DESTINATION</label>
+                        <input type="text" id="destination" class="mt-1 form-input w-full border-gray-300">
+                    </div>
+
+                    <div class="border-t pt-4 mt-4 border-gray-200">
+                        <h3 class="text-lg font-bold text-roadways mb-3">Financial & Fuel</h3>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="weight" class="block text-sm font-semibold text-gray-700 required-label">Weight (MT)</label>
+                            <input type="number" step="0.001" id="weight" class="mt-1 form-input w-full border-gray-300 text-roadways" required>
+                        </div>
+                        <div>
+                            <label for="freight" class="block text-sm font-semibold text-gray-700">Freight (₹)</label>
+                            <input type="number" step="0.01" id="freight" class="mt-1 form-input w-full border-gray-300 text-green-700">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="diesel" class="block text-sm font-semibold text-gray-700">DIESEL (L)</label>
+                            <input type="number" step="0.01" id="diesel" class="mt-1 form-input w-full border-gray-300">
+                        </div>
+                        <div>
+                            <label for="total_adv" class="block text-sm font-semibold text-gray-700">TOTAL ADV (₹)</label>
+                            <input type="number" step="0.01" id="total_adv" class="mt-1 form-input w-full border-gray-300 text-red-700">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="balance" class="block text-sm font-semibold text-gray-700">BALANCE (₹)</label>
+                            <input type="number" step="0.01" id="balance" class="mt-1 form-input w-full border-gray-300 text-red-700">
+                        </div>
+                        <div>
+                            <label for="margin" class="block text-sm font-semibold text-gray-700">MARGIN (₹)</label>
+                            <input type="number" step="0.01" id="margin" class="mt-1 form-input w-full border-gray-300 text-purple-700">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="pump_name" class="block text-sm font-semibold text-gray-700">PUMP NAME</label>
+                        <input type="text" id="pump_name" class="mt-1 form-input w-full border-gray-300">
+                    </div>
+                    <div>
+                        <label for="payment_officer" class="block text-sm font-semibold text-gray-700">Payment Officer</label>
+                        <input type="text" id="payment_officer" class="mt-1 form-input w-full border-gray-300">
+                    </div>
+
+                    <div>
+                        <label for="damage_if_any" class="block text-sm font-semibold text-gray-700">Damage If Any</label>
+                        <textarea id="damage_if_any" class="mt-1 form-input w-full border-gray-300" rows="2"></textarea>
+                    </div>
+                    
+                    <div id="form-error" class="text-red-500 text-sm hidden"></div>
+
+                    <div class="flex space-x-3 pt-4">
+                        <button type="submit" id="save-btn" class="flex-grow bg-roadways hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-300">
+                            <span id="save-btn-text">Save New Record</span>
+                        </button>
+                        <button type="button" id="cancel-btn" class="hidden w-24 border border-gray-300 bg-gray-100 text-gray-700 font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition duration-300">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 border-gray-200">Transaction History</h2>
+                
+                <div id="loading" class="flex justify-center items-center py-20 hidden">
+                    <div class="spinner"></div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 data-table">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SL NO.</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LR NO. / BILL NO.</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TRUCK / DEST.</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WEIGHT (MT)</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FREIGHT (₹)</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ADVANCE / BALANCE (₹)</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DIESEL (L) / PUMP</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MARGIN (₹)</th>
+                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bilty-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                    <p id="no-data-msg" class="text-center py-10 text-gray-500 hidden">No entries found. Start by saving a new record.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" class="hidden fixed top-5 right-5 z-30 px-5 py-3 rounded-lg shadow-xl text-white">
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        // *** RENDER URL ADJUSTMENT - MUST BE UPDATED AFTER DEPLOYMENT ***
+        const API_URL = 'https://roadways-ledger-backend-xxxx.onrender.com'; 
+        // ***************************************************************
+        
+        // This links the main initialization logic from script.js to the page load event
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            biltyForm.addEventListener('submit', handleFormSubmit);
+            cancelBtn.addEventListener('click', resetForm);
+            exportBtn.addEventListener('click', exportToCSV);
+        });
+    </script>
+</body>
+</html>
